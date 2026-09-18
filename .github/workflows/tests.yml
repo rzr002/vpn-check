@@ -1,0 +1,25 @@
+name: Tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python: ['3.10', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit and loopback API tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Frontend and launcher syntax
+        run: |
+          node --check public/app.js
+          bash -n 打开检测面板.command
+          bash -n 开始检测.command

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VPN Check · 对照两条路径，排查代理卡顿</title>
+  <meta name="description" content="本地运行的 macOS 代理诊断工具。对照经代理与绕过代理的网页响应，查看下载速度、波动和历史报告。">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="masthead"><a class="brand" href="/" aria-label="VPN Check 首页"><span class="brand-icon"><i></i><i></i><i></i><i></i></span><b>VPN CHECK<span class="brand-divider">/</span><span class="brand-cn">网络检测台</span></b></a><span class="local-badge"><span class="dot"></span> 本机运行 <span class="mono">LOCAL ONLY</span></span></header>
+  <main>
+    <section class="intro"><div><div class="eyebrow">YOUR CONNECTION, IN FOCUS</div><h1>VPN 卡顿，<br class="mobile-break">先看两条路径的差别。</h1><p>在这台 Mac 上，对照经代理与绕过代理的响应，留下可比较的检测报告。</p></div><div class="intro-index mono">01<span>NETWORK<br>DIAGNOSTICS</span></div></section>
+    <div id="demo-banner" class="notice demo-banner" role="status" hidden>演示模式 · 所有数字均为合成样例，未发起网络测试或读取本机配置。真实检测请使用普通启动模式。</div>
+    <div id="service-error" class="notice error" role="alert" hidden></div>
+    <section class="workspace">
+      <aside class="control-panel">
+        <div class="panel-label"><span>检测设置</span><span class="mono">CONTROL</span></div>
+        <fieldset id="mode-options"><legend class="sr-only">检测模式</legend>
+          <label class="mode-option"><input type="radio" name="mode" value="quick" checked><span class="radio-dot"></span><span><strong>快速诊断</strong><small>网页响应 + 下载速度</small></span><span class="mode-time">约 2 分钟</span></label>
+          <label class="mode-option"><input type="radio" name="mode" value="stability"><span class="radio-dot"></span><span><strong>稳定性观察</strong><small>持续采样，发现间歇卡顿</small></span><span class="mode-time">约 10 分钟</span></label>
+        </fieldset>
+        <p class="traffic-note" id="traffic-note">本轮下载约 40 MiB · 4 个网站 · 双路径对照</p>
+        <button id="start" class="primary-button" disabled><span class="play-icon" aria-hidden="true">▶</span><span id="start-label">正在连接…</span><span aria-hidden="true">↗</span></button>
+        <button id="stop" class="stop-button" hidden>■ 停止本轮检测</button>
+        <div class="run-progress"><div class="progress-info"><span id="run-message" role="status" aria-live="polite">正在连接本地服务…</span><span class="mono" id="percent">0%</span></div><progress id="progress" value="0" max="100" aria-label="检测进度"></progress><div class="run-bottom"><span id="elapsed">尚未开始</span><span id="run-phase">随时可以停止</span></div></div>
+        <div class="connection-heading"><span>当前连接</span><button id="refresh-network" class="text-button" aria-label="刷新连接状态">刷新 ↻</button></div>
+        <div class="connection-card"><div class="connection-top"><span id="connection-dot" class="dot muted"></span><strong id="connection-title">读取代理状态…</strong></div><dl><div><dt>代理入口</dt><dd class="mono" id="proxy-port">—</dd></div><div><dt>运行模式</dt><dd id="proxy-mode">—</dd></div><div><dt>TUN</dt><dd id="tun">—</dd></div><div><dt>公司 VPN</dt><dd id="cisco">—</dd></div></dl><p class="status-time" id="network-time">只读检查，不修改配置</p></div>
+        <div class="quiet-note"><span aria-hidden="true">↳</span><p>保持当前节点不变。换节点后再测一轮，就能对照两次结果。</p></div>
+      </aside>
+      <section class="results-panel" aria-label="检测结果">
+        <div class="results-heading"><div><div class="eyebrow" id="view-kind">LIVE DIAGNOSTICS</div><h2 id="result-title">等待开始检测</h2><p id="result-subtitle">先运行快速诊断；间歇卡顿再选稳定性观察。</p></div><span class="status-pill" id="view-badge">准备就绪</span></div>
+        <div id="insight" class="notice" hidden></div>
+        <div class="metrics">
+          <article class="metric"><div class="metric-label">代理下载 <span aria-hidden="true">↓</span></div><div class="metric-reading"><strong id="speed-value">—</strong><span>Mbps</span></div><p id="speed-detail">等待定量下载</p></article>
+          <article class="metric"><div class="metric-label">Google 首字节 <span aria-hidden="true">↗</span></div><div class="metric-reading"><strong id="response-value">—</strong><span>ms</span></div><p id="response-detail">经代理 · 成功样本中位数</p></article>
+          <article class="metric"><div class="metric-label">代理请求成功率 <span aria-hidden="true">✓</span></div><div class="metric-reading"><strong id="success-value">—</strong><span>%</span></div><p id="success-detail">等待网页响应</p></article>
+          <article class="metric"><div class="metric-label">本地网关丢包 <span aria-hidden="true">⌁</span></div><div class="metric-reading"><strong id="loss-value">—</strong><span>%</span></div><p id="loss-detail">20 个 ICMP 样本 · 非节点丢包</p></article>
+        </div>
+        <div class="chart-section"><div class="section-heading"><div><h3>响应时间曲线</h3><span class="small-muted">每轮首字节耗时 · 越低越快</span></div><label class="chart-select"><span class="sr-only">曲线目标网站</span><select id="chart-host"><option>Google</option><option>GitHub</option><option>Cloudflare</option><option>百度</option></select></label></div>
+          <div class="chart-legend"><span><i class="legend-line proxy-line"></i>经代理</span><span><i class="legend-line direct-line"></i>绕过代理</span><span class="legend-note">× 请求未成功</span></div>
+          <div class="chart-wrap"><svg id="chart" viewBox="0 0 760 190" role="img" aria-label="尚无响应数据"></svg><div id="chart-empty"><span class="empty-wave" aria-hidden="true">▁ ▂ ▄ ▂ ▁ ▃ ▅ ▂ ▁</span><strong>等待第一组网络样本</strong><span>点击左侧「开始检测」，曲线会随测试逐步出现</span></div></div>
+        </div>
+        <div class="section-heading table-heading"><div><h3>网站对照</h3><span class="small-muted">首字节中位数 / 本轮成功次数</span></div><span class="small-muted mono">HTTP / HTTPS</span></div>
+        <div class="table-scroll"><table><thead><tr><th>测试目标</th><th>绕过代理</th><th>经代理</th><th>代理响应波动</th><th>观测节点</th></tr></thead><tbody id="comparison"></tbody></table></div>
+        <div class="result-footer"><span id="sample-note">完成后自动保存本地报告。</span><button id="export" class="text-button" disabled>导出 JSON ↗</button></div>
+      </section>
+    </section>
+    <section class="history-section"><div class="section-heading"><div class="history-title"><span class="section-number mono">02</span><h2>检测记录</h2><span class="small-muted" id="history-count">正在读取</span></div><button id="back-current" class="text-button" hidden>返回本轮检测 ↗</button></div><div id="history-list" class="history-list"><p class="small-muted">正在读取本地记录…</p></div></section>
+    <details class="explanation"><summary>这些数字分别说明什么？<span aria-hidden="true">+</span></summary><div class="explanation-grid"><p><strong>速度 ≠ 最大带宽</strong>下载测速是到 Cloudflare 的单连接平均值，包含连接开销。本工具暂不测上传。</p><p><strong>响应 ≠ 纯网络延迟</strong>首字节耗时包含连接、TLS 和网站处理。HTTP 2xx/3xx 记为成功；4xx/5xx 与连接失败分开计数。</p><p><strong>本地丢包 ≠ VPN 丢包</strong>网关 ICMP 只反映本地路径。“绕过代理”仍可能被 TUN 接管，经代理也可能被规则分流为直连。</p><p><strong>短时通过 ≠ 全天稳定</strong>记录只说明采样窗口。节点来自活跃连接采样，未捕获时保持未知。间歇卡顿建议运行稳定性观察。</p></div></details>
+    <footer class="footer"><span><b>VPN CHECK</b> <span class="mono">v0.2.0</span></span><span>数据留在本机 · 公开网站用于测试 · 配置保持不变</span><span class="mono">MADE TO MEASURE.</span></footer>
+  </main>
+</body>
+</html>
