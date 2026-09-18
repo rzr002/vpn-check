@@ -12,7 +12,7 @@ A local macOS dashboard for paired proxy/bypass requests, download samples, and 
 
 </div>
 
-![VPN Check dashboard with explicitly labelled synthetic data](docs/assets/dashboard.png)
+![VPN Check dashboard with explicitly labelled synthetic data](docs/assets/dashboard.jpg)
 
 *The screenshot contains synthetic example data, not a benchmark or a user's network records. The dashboard currently uses Chinese labels.*
 

@@ -17,7 +17,7 @@
 
 </div>
 
-![VPN Check 检测面板，展示明确标注的合成演示数据](docs/assets/dashboard.png)
+![VPN Check 检测面板，展示明确标注的合成演示数据](docs/assets/dashboard.jpg)
 
 *界面预览使用合成数据，不是测速成绩，也不包含真实用户网络信息。*
 
@@ -63,7 +63,7 @@ python3 web_server.py --demo --port 8877 --open
 <details>
 <summary>展开查看响应曲线与网站对照（合成演示）</summary>
 
-![合成演示中的响应曲线与网站对照](docs/assets/measurements.png)
+![合成演示中的响应曲线与网站对照](docs/assets/measurements.jpg)
 
 </details>
 
